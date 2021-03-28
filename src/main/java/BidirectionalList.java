@@ -1,6 +1,6 @@
 import java.util.ListIterator;
 
-public class BiDirectionalList<T> {
+public class BidirectionalList<T>  {
     private Item<T> first;
     private Item<T> last;
 
@@ -34,16 +34,13 @@ public class BiDirectionalList<T> {
         }
     }
 
-    public int size(){
+    public int size() {
         int size = 1;
-
-        if (first == null){
+        if (first == null) {
             return 0;
         }
-
         Item<T> current = first;
-
-        while (current.getNext() != null){
+        while (current.getNext() != null) {
             size++;
             current = current.getNext();
         }
@@ -67,6 +64,14 @@ public class BiDirectionalList<T> {
             current = current.getNext();
         }
         return false;
+    }
+
+    public void removeLast(){
+        last = last.getPrevious();
+    }
+
+    public void removeFirst(){
+        first = first.getNext();
     }
 
     private static class Item<T> {
@@ -99,30 +104,30 @@ public class BiDirectionalList<T> {
         }
     }
 
-    private class Iterator implements ListIterator<T>{
+    private class Iterator implements ListIterator<T> {
 
-        Item<T> current = first;
+        Item<T> current = null;
 
         @Override
         public boolean hasNext() {
-            if (current != null){
-                return true;
-            }
-            return false;
+          if (current == null ){
+              return first != null;
+          }
+              return current.getNext() != null;
         }
 
         @Override
         public T next() {
-            Item<T> oldCurrent = current;
+            if (current == null){
+                current = first;
+                return first.getData();
+            }
             advance();
-            return oldCurrent.getData();
+            return current.getData();
         }
 
         @Override
         public boolean hasPrevious() {
-            if (current.getPrevious() != null){
-                return true;
-            }
             return false;
         }
 
@@ -145,7 +150,7 @@ public class BiDirectionalList<T> {
 
         @Override
         public void remove() {
-
+           current = null;
         }
 
         @Override
@@ -158,11 +163,11 @@ public class BiDirectionalList<T> {
 
         }
 
-        private void advance(){
+        private void advance() {
             current = current.getNext();
         }
 
-        private void back(){
+        private void back() {
             current = current.getPrevious();
         }
     }
